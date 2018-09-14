@@ -1,0 +1,46 @@
+
+<!DOCTYPE html>
+
+
+{% import "bootstrap/wtf.html" as wtf %}
+{% extends "base.html" %}
+{% block title %}Register{% endblock %}
+{% block body %}
+<div class="content-section">
+  <div class="center">
+    <h1>Register a new material </h1>
+    <br/>
+    {{ wtf.quick_form(form) }}
+  </div>
+</div>
+<table class="table table-bordered">
+  <thead>
+    <th>Name</th>
+    <th>Brand</th>
+    <th>Purchase date</th>
+    <th>Notes</th>
+    <th>Size</th>
+    <th>Skin</th>
+    <th>Price</th>
+    <th>Type</th>
+  </thead>
+  <tbody>
+
+  {% for m in material %}
+    <tr>
+      <td>{{ m.name }}</td>
+      <td>{{ m.brand }}</td>
+      <td>{{ m.purchase_date }}</td>
+      <td>{{ m.notes }}</td>
+      <td>{{ m.size }}</td>
+      <td>{{ m.skin }}</td>
+      <td>{{ m.price }}</td>
+      <td>{{ m.type }}</td>
+
+    </tr>
+  {% endfor %}
+
+  </tbody>
+  </table>
+
+{% endblock %}

@@ -1,0 +1,39 @@
+
+{% import "bootstrap/wtf.html" as wtf %}
+{% extends "base.html" %}
+{% block title %}Rentals{% endblock %}
+{% block body %}
+<div class="center">
+    <h1>Enter a new rental </h1>
+    <br/>
+    {{ wtf.quick_form(form) }}
+
+</div>
+
+<table class="table table-bordered">
+    <th>Person code</th>
+    <th>Material</th>
+    <th>Date</th>
+    <th>Returned</th>
+    <th>Return date</th>
+    <th>Price</th>
+    <th>Deposit</th>
+    <th>Notes</th>
+  </thead>
+  <tbody>
+
+  {% for r in rentals %}
+    <tr>
+        <td>{{ r.person_code }}</td>
+        <td>{{ r.material_name }}</td>
+        <td>{{ r.date_rental }}</td>
+        <td>{{ r.date_return }}</td>
+        <td>{{ r.price }}</td>
+        <td>{{ r.deposit }}</td>
+        <td>{{ r.notes }}</td>
+    </tr>
+  {% endfor %}
+
+  </tbody>
+</table>
+{% endblock %}

@@ -21,11 +21,15 @@
   </thead>
   <tbody>
 
-  {% for row in people %}
+  {% for p in people %}
     <tr>
-      {% for elem in row %}
-        <td>{{ elem }}</td>
-      {% endfor %}
+      <td>{{ p.name }}</td>
+      <td>{{ p.surname }}</td>
+      <td>{{ p.email }}</td>
+      <td>{{ p.type }}</td>
+      <td>{{ p.phone }}</td>
+      <td>{{ p.bday }}</td>
+      <td>{{ p.code }}</td>
     </tr>
   {% endfor %}
 

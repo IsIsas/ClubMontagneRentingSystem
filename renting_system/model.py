@@ -17,43 +17,6 @@ class Person(db.Model):
     bday = db.Column(db.Date)
 
 
-def show_people():
-    db = pymysql.connect(host="localhost", port=3306, user="root", password="miao", db="club_montagne")
-    try:
-        with db.cursor() as cursor:
-            # Create a new record
-            sql = """SELECT * from TYPES"""
-            cursor.execute(sql)
-            types = cursor.fetchall()
-            sql = """SELECT * from PEOPLE"""
-            cursor.execute(sql)
-            people = cursor.fetchall()
-
-        # connection is not autocommit by default. So you must commit to save
-        # your changes.
-        db.commit()
-    finally:
-        db.close()
-    return types, people
-
-
-def insert_new_person(name, surname, email, type, phone, code, bday):
-    db = pymysql.connect(host="localhost", port=3306, user="root", password="miao", db="club_montagne")
-    try:
-        with db.cursor() as cursor:
-            # Create a new record
-            sql = """INSERT INTO PEOPLE (name, surname, email, type, phone, code) """ \
-                  """VALUES("%s", "%s", "%s", %d, "%s", "%s, "%s")""" % (name, surname, email, type, phone, code, bday)
-            print(sql)
-            cursor.execute(sql)
-
-        # connection is not autocommit by default. So you must commit to save
-        # your changes.
-        db.commit()
-    finally:
-        db.close()
-
-
 class Material(db.Model):
 
     __tablename__ = 'MATERIAL'
@@ -69,22 +32,6 @@ class Material(db.Model):
     type = db.Column(db.String(20))
 
 
-def insert_new_matos(name, marque, date, type_matos):
-    db = pymysql.connect(host="localhost", port=3306, user="root", password="miao", db="club_montagne")
-    try:
-        with db.cursor() as cursor:
-            # Create a new record
-            sql = """INSERT INTO PEOPLE (name, marque, dateachat, type) VALUES("%s", "%s", "%s", %s, "%s")""" % (name, marque, date, type_matos)
-            print(sql)
-            cursor.execute(sql)
-
-        # connection is not autocommit by default. So you must commit to save
-        # your changes.
-        db.commit()
-    finally:
-        db.close()
-
-
 class Rental(db.Model):
 
     __tablename__ = 'RENTALS'
@@ -95,8 +42,59 @@ class Rental(db.Model):
     date_return = db.Column(db.Date)
     price = db.Column(db.Float)
     deposit = db.Column(db.Float)
-    returned = db.Column(db.Integer)
     notes = db.Column(db.String(200))
     id = db.Column(db.Integer, primary_key=True)
 
 
+class MaterialTypes(db.Model):
+
+    __tablename__ = 'MATERIAL_TYPES'
+
+    name = db.Column(db.String(20), primary_key=True)
+    rental_price = db.Column(db.Float)
+    deposit_price = db.Column(db.Float)
+
+
+class Types(db.Model):
+
+    __tablename__ = 'TYPES'
+
+    type_name = db.Column(db.String(30), primary_key=True)
+    price_factor = db.Column(db.Float)
+
+
+def show_people():
+    people = Person.query.all()
+    return people
+
+
+def get_people_datas():
+    people_datas = Person.query.with_entities(Person.email, Person.code)
+    return people_datas
+
+
+def get_person_code(code, email):
+    if code is not None:
+        return code
+    person_code = Person.query().with_entities(Person.code).filter_by(email=email)
+    return person_code
+
+
+def get_material_names():
+    material_names = Material.query.with_entities(Material.name)
+    return material_names
+
+
+def get_material_types():
+    material_types = MaterialTypes.query.with_entities(MaterialTypes.name)
+    return material_types
+
+
+def get_rentals():
+    rentals = Rental.query.all()
+    return rentals
+
+
+def get_materials():
+    materials = Material.query.all()
+    return materials

@@ -1,8 +1,19 @@
-from renting_system.model import insert_new_person, show_people
+from renting_system.model import show_people
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, ValidationError, IntegerField, DateField, SelectField
+from wtforms import StringField, SubmitField, ValidationError, IntegerField, DateField,\
+    SelectField, FloatField, BooleanField
 from wtforms.validators import DataRequired, Email
-from renting_system.model import Person
+from renting_system.model import Person, get_people_datas, get_material_names, get_material_types
+from wtforms.widgets import TextArea
+from enum import Enum
+
+
+class PeopleTypes(Enum):
+    COMMITTEE = 1
+    EPFL_STUDENT = 2
+    UNIL_STUDENT = 3
+    EPFL_PHD = 4
+    UNIL_PHD = 5
 
 
 class NewPersonForm(FlaskForm):
@@ -12,9 +23,10 @@ class NewPersonForm(FlaskForm):
     name = StringField('Last Name', validators=[DataRequired()])
     surname = StringField('Surname', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
-    code = StringField('Code', validators=[DataRequired()])
     phone = StringField('Phone number', validators=[DataRequired()])
-    type = IntegerField('Type', validators=[DataRequired()])
+    people_types = [('%s'%p.value, p.name) for p in PeopleTypes]
+    print(people_types)
+    type = SelectField('Type', choices=people_types)
     bday = DateField('Birthday', validators=[DataRequired()], format='%d/%m/%Y')
     submit = SubmitField('Register')
 
@@ -22,48 +34,42 @@ class NewPersonForm(FlaskForm):
         if Person.query.filter_by(email=field.data).first():
             raise ValidationError('Email is already in use.')
 
-    def validate_code(self, field):
-        if Person.query.filter_by(code=field.data).first():
-            raise ValidationError('Code is already in use.')
 
 
 def get_list_people():
-    types, people = show_people()
-    t = {}
-    for row in types:
-        t[row[0]] = row[1]
-    people_table = []
-    for row in people:
-        people_table.append([elem for elem in row])
+    people = show_people()
 
-    return people_table
+    return people
 
 
 class NewMaterialForm(FlaskForm):
     """
     Form to create a new material
     """
-    name = StringField('Name')
+    name = StringField('Name', validators=[DataRequired()])
     brand = StringField('Brand')
-    purchase_date = DateField('Purchase date')
-    notes = StringField('Notes')
+    purchase_date = DateField('Purchase date', format='%d/%m/%Y',)
+    notes = StringField('Notes', widget=TextArea())
     size = IntegerField('Size')
-    skin = IntegerField('Type')
-    price = DateField('Birthday')
-    # TODO: get the choices from a table on the db
-    myChoices = ['ski']
-    type = SelectField(u'Type', choices=myChoices)
+    skin = BooleanField('Skin')
+    price = FloatField('Price')
+    material_types = get_material_types()
+    type = SelectField(u'Type', choices=[(elem[0], elem[0]) for elem in material_types])
     submit = SubmitField('Register')
 
 
 class NewRentalForm(FlaskForm):
-
-    person_code = StringField('Name')
-    material_name = StringField('Brand')
+    people_emails = []
+    people_codes = []
+    for data in get_people_datas():
+        people_emails.append(data[0])
+        people_codes.append(data[1])
+    person_email = SelectField('Person email', choices=[(elem, elem) for elem in people_emails])
+    material_names = get_material_names()
+    material_name = SelectField('Material names', choices=[(elem, elem) for elem in material_names])
     date_rental = DateField('Purchase date')
-    date_return = StringField('Notes')
-    price = IntegerField('Size')
-    deposit = IntegerField('Type')
-    returned = DateField('Birthday')
-    notes = SelectField(u'Notes')
+    price = IntegerField('Rental price')
+    deposit = FloatField('Deposit')
+    notes = StringField(u'Notes', widget=TextArea())
     submit = SubmitField('Register')
+
