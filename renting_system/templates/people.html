@@ -1,7 +1,22 @@
-
 {% import "bootstrap/wtf.html" as wtf %}
 {% extends "base.html" %}
 {% block title %}Register{% endblock %}
+{% block head %}
+    <script src="{{url_for('static', filename='js/jquery-3.3.1.min.js')}}"></script>
+    <script src="{{url_for('static', filename='js/jquery.tablesorter.js')}}"></script>
+    <script src="{{url_for('static', filename='js/jquery.tablesorter.widgets.js')}}"></script>
+    <script src="{{url_for('static', filename='js/jquery.tablesorter.pager.js')}}"></script>
+
+<!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.js"></script>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap.min.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/jquery.tablesorter.pager.css')}}">
+
+
+
+{% endblock%}
+
 {% block body %}
 <div class="center">
     <h1>Register a new person </h1>
@@ -9,30 +24,25 @@
     {{ wtf.quick_form(form) }}
 
 </div>
-<table class="table table-bordered">
-  <thead>
-    <th>Name</th>
-    <th>Surname</th>
-    <th>Email</th>
-    <th>Type</th>
-    <th>Phone</th>
-    <th>Date of birth</th>
-    <th>Code</th>
-  </thead>
-  <tbody>
+<table  id="table"
+        class="table table-bordered table-striped"
+        data-search="true"
+        data-id-field="email"
+        data-toggle="table"
+        data-pagination="true"
+        data-url="/people_table">
+    <thead>
+        <tr>
+            <th data-sortable="true" data-field="name">Name</th>
+            <th data-sortable="true" data-field="surname">Surname</th>
+            <th data-sortable="true" data-field="email">Email</th>
+            <th data-field="type">Type</th>
+            <th data-sortable="true" data-field="phone">Phone</th>
+            <th data-sortable="true" data-field="bday">Birthday</th>
+            <th data-sortable="true" data-field="code">Code</th>
+        </tr>
+    </thead>
 
-  {% for p in people %}
-    <tr>
-      <td>{{ p.name }}</td>
-      <td>{{ p.surname }}</td>
-      <td>{{ p.email }}</td>
-      <td>{{ p.type }}</td>
-      <td>{{ p.phone }}</td>
-      <td>{{ p.bday }}</td>
-      <td>{{ p.code }}</td>
-    </tr>
-  {% endfor %}
-
-  </tbody>
   </table>
+  <script src="{{url_for('static', filename='js/table.js')}}"></script>
 {% endblock %}

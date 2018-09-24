@@ -1,46 +1,53 @@
 
-<!DOCTYPE html>
-
-
 {% import "bootstrap/wtf.html" as wtf %}
-{% extends "base.html" %}
+{% extends "bootstrap/base.html" %}
 {% block title %}Register{% endblock %}
+{% block head %}
+    <script src="{{url_for('static', filename='js/jquery-3.3.1.min.js')}}"></script>
+    <script src="{{url_for('static', filename='js/jquery.tablesorter.js')}}"></script>
+    <script src="{{url_for('static', filename='js/jquery.tablesorter.widgets.js')}}"></script>
+    <script src="{{url_for('static', filename='js/jquery.tablesorter.pager.js')}}"></script>
+
+<!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.js"></script>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap.min.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/jquery.tablesorter.pager.css')}}">
+
+{% endblock%}
+
 {% block body %}
-<div class="content-section">
   <div class="center">
     <h1>Register a new material </h1>
     <br/>
     {{ wtf.quick_form(form) }}
-  </div>
-</div>
-<table class="table table-bordered">
-  <thead>
-    <th>Name</th>
-    <th>Brand</th>
-    <th>Purchase date</th>
-    <th>Notes</th>
-    <th>Size</th>
-    <th>Skin</th>
-    <th>Price</th>
-    <th>Type</th>
-  </thead>
-  <tbody>
 
-  {% for m in material %}
-    <tr>
-      <td>{{ m.name }}</td>
-      <td>{{ m.brand }}</td>
-      <td>{{ m.purchase_date }}</td>
-      <td>{{ m.notes }}</td>
-      <td>{{ m.size }}</td>
-      <td>{{ m.skin }}</td>
-      <td>{{ m.price }}</td>
-      <td>{{ m.type }}</td>
+    </table>
+    <table  id="table"
+        class="table table-bordered table-striped"
+        data-search="true"
+        data-id-field="name"
+        data-toggle="table"
+        data-pagination="true"
+        data-url="/material_table">
+    <thead>
+        <tr>
+            <th data-sortable="true" data-field="name">Name</th>
+            <th data-sortable="true" data-field="brand">Brand</th>
+            <th data-sortable="true" data-field="purchase_date">Purchase date</th>
+            <th data-field="notes">Notes</th>
+            <th data-sortable="true" data-field="size">Size</th>
+            <th data-sortable="true" data-field="skin">Skin</th>
+            <th data-sortable="true" data-field="price">Price</th>
+            <th data-sortable="true" data-field="type">Type</th>
 
-    </tr>
-  {% endfor %}
+        </tr>
+    </thead>
 
-  </tbody>
   </table>
+  <script src="{{url_for('static', filename='js/table.js')}}"></script>
+  </div>
+
+
 
 {% endblock %}

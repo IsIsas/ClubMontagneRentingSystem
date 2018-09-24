@@ -1,7 +1,8 @@
 from renting_system.model import show_people
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, ValidationError, IntegerField, DateField,\
+from wtforms import StringField, SubmitField, ValidationError, IntegerField, \
     SelectField, FloatField, BooleanField
+from wtforms.fields.html5 import DateField
 from wtforms.validators import DataRequired, Email
 from renting_system.model import Person, get_people_datas, get_material_names, get_material_types
 from wtforms.widgets import TextArea
@@ -35,7 +36,6 @@ class NewPersonForm(FlaskForm):
             raise ValidationError('Email is already in use.')
 
 
-
 def get_list_people():
     people = show_people()
 
@@ -48,7 +48,7 @@ class NewMaterialForm(FlaskForm):
     """
     name = StringField('Name', validators=[DataRequired()])
     brand = StringField('Brand')
-    purchase_date = DateField('Purchase date', format='%d/%m/%Y',)
+    purchase_date = DateField('Purchase date', format='%Y-%m-%d')
     notes = StringField('Notes', widget=TextArea())
     size = IntegerField('Size')
     skin = BooleanField('Skin')
@@ -58,18 +58,22 @@ class NewMaterialForm(FlaskForm):
     submit = SubmitField('Register')
 
 
+
 class NewRentalForm(FlaskForm):
     people_emails = []
     people_codes = []
     for data in get_people_datas():
         people_emails.append(data[0])
         people_codes.append(data[1])
-    person_email = SelectField('Person email', choices=[(elem, elem) for elem in people_emails])
+    person_code = SelectField('Person code', choices=[(elem, elem) for elem in people_codes])
+    person_email = SelectField('Person email', choices=[(elem, elem) for elem in people_emails], validators=[Email(), Optional()])
     material_names = get_material_names()
-    material_name = SelectField('Material names', choices=[(elem, elem) for elem in material_names])
-    date_rental = DateField('Purchase date')
+    material_name = SelectField('Material names', choices=[(elem[0], elem[0]) for elem in material_names])
     price = IntegerField('Rental price')
     deposit = FloatField('Deposit')
     notes = StringField(u'Notes', widget=TextArea())
     submit = SubmitField('Register')
+
+
+
 

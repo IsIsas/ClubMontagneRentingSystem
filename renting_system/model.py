@@ -8,13 +8,35 @@ class Person(db.Model):
 
     __tablename__ = 'PEOPLE'
 
-    name = db.Column(db.String(30), unique=True, primary_key=True)
-    surname = db.Column(db.String(30), unique=True, primary_key=True)
+    name = db.Column(db.String(30))
+    surname = db.Column(db.String(30))
     email = db.Column(db.String(30), unique=True, primary_key=True)
     type = db.Column(db.Integer)
     phone = db.Column(db.String(20), unique=True)
     code = db.Column(db.String(30), unique=True)
     bday = db.Column(db.Date)
+
+    def __init__(self, name, surname, email, type, phone, code, bday):
+        self.name = name
+        self.surname = surname
+        self.email = email
+        self.type = type
+        self.phone = phone
+        self.code = code
+        self.bday = bday
+
+    @property
+    def serialize(self):
+        """Return object data in easily serializeable format"""
+        return {
+            'name': self.name,
+            'surname': self.surname,
+            'email': self.email,
+            'type': self.type,
+            'phone': self.phone,
+            'code': self.code,
+            'bday': self.bday
+        }
 
 
 class Material(db.Model):
@@ -31,6 +53,30 @@ class Material(db.Model):
     price = db.Column(db.Float)
     type = db.Column(db.String(20))
 
+    def __init__(self, name, brand, purchase_date, notes, size, skin, price, type):
+        self.name = name
+        self.brand = brand
+        self.purchase_date = purchase_date
+        self.notes = notes
+        self.size = size
+        self.skin = skin
+        self.price = price
+        self.type = type
+
+    @property
+    def serialize(self):
+        """Return object data in easily serializeable format"""
+        return {
+            'name': self.name,
+            'brand': self.brand,
+            'purchase_date': self.purchase_date,
+            'notes': self.notes,
+            'size': self.size,
+            'skin': self.skin,
+            'price': self.price,
+            'type': self.type
+        }
+
 
 class Rental(db.Model):
 
@@ -44,6 +90,30 @@ class Rental(db.Model):
     deposit = db.Column(db.Float)
     notes = db.Column(db.String(200))
     id = db.Column(db.Integer, primary_key=True)
+
+    def __init__(self, person_code, material_name, date_rental, date_return, price, deposit, notes):
+        self.person_code = person_code
+        self.material_name = material_name
+        self.date_rental = date_rental
+        self.date_return = date_return
+        self.price = price
+        self.deposit = deposit
+        self.notes = notes
+
+
+    @property
+    def serialize(self):
+        """Return object data in easily serializeable format"""
+        return {
+            'person_code': self.person_code,
+            'material_name': self.material_name,
+            'date_rental': self.date_rental,
+            'date_return': self.date_return,
+            'price': self.price,
+            'deposit': self.deposit,
+            'notes': self.notes,
+            'id': self.id
+        }
 
 
 class MaterialTypes(db.Model):

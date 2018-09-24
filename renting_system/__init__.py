@@ -6,8 +6,9 @@ from flask_migrate import Migrate
 
 def create_app():
 
-    f_app = Flask("RentingSystem", template_folder="templates", static_folder="../build")
+    f_app = Flask("RentingSystem", template_folder="templates", static_folder="static")
     f_app.config.from_pyfile('config.py')
+    f_app.config['JSON_SORT_KEYS'] = False
     Bootstrap(f_app)
 
     return f_app

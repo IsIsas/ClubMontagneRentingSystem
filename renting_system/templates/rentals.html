@@ -2,6 +2,24 @@
 {% import "bootstrap/wtf.html" as wtf %}
 {% extends "base.html" %}
 {% block title %}Rentals{% endblock %}
+
+
+{% block head %}
+    <script src="{{url_for('static', filename='js/jquery-3.3.1.min.js')}}"></script>
+    <script src="{{url_for('static', filename='js/jquery.tablesorter.js')}}"></script>
+    <script src="{{url_for('static', filename='js/jquery.tablesorter.widgets.js')}}"></script>
+    <script src="{{url_for('static', filename='js/jquery.tablesorter.pager.js')}}"></script>
+
+<!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.js"></script>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap.min.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/jquery.tablesorter.pager.css')}}">
+
+
+
+{% endblock%}
+
 {% block body %}
 <div class="center">
     <h1>Enter a new rental </h1>
@@ -10,30 +28,24 @@
 
 </div>
 
-<table class="table table-bordered">
-    <th>Person code</th>
-    <th>Material</th>
-    <th>Date</th>
-    <th>Returned</th>
-    <th>Return date</th>
-    <th>Price</th>
-    <th>Deposit</th>
-    <th>Notes</th>
-  </thead>
-  <tbody>
+<table  id="table"
+        class="table table-bordered table-striped"
+        data-search="true"
+        data-id-field="email"
+        data-toggle="table"
+        data-pagination="true"
+        data-url="/rental_table">
+    <thead>
+        <tr>
+            <th data-sortable="true" data-field="person_code">Person</th>
+            <th data-sortable="true" data-field="material_name">Material</th>
+            <th data-field="date_return">Return date</th>
+            <th data-sortable="true" data-field="price">Price</th>
+            <th data-sortable="true" data-field="deposit">Deposit</th>
+            <th data-sortable="true" data-field="notes">Notes</th>
+        </tr>
+    </thead>
 
-  {% for r in rentals %}
-    <tr>
-        <td>{{ r.person_code }}</td>
-        <td>{{ r.material_name }}</td>
-        <td>{{ r.date_rental }}</td>
-        <td>{{ r.date_return }}</td>
-        <td>{{ r.price }}</td>
-        <td>{{ r.deposit }}</td>
-        <td>{{ r.notes }}</td>
-    </tr>
-  {% endfor %}
-
-  </tbody>
-</table>
+  </table>
+  <script src="{{url_for('static', filename='js/table.js')}}"></script>
 {% endblock %}
