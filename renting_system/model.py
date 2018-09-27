@@ -1,18 +1,14 @@
-#!/usr/bin/python
-
-import pymysql
 from renting_system import db
 
 
 class Person(db.Model):
-
     __tablename__ = 'PEOPLE'
 
     name = db.Column(db.String(30))
     surname = db.Column(db.String(30))
     email = db.Column(db.String(30), unique=True, primary_key=True)
     type = db.Column(db.Integer)
-    phone = db.Column(db.String(20), unique=True)
+    phone = db.Column(db.String(20))
     code = db.Column(db.String(30), unique=True)
     bday = db.Column(db.Date)
 
@@ -43,7 +39,6 @@ class Material(db.Model):
 
     __tablename__ = 'MATERIAL'
 
-    # name == code
     name = db.Column(db.String(10), primary_key=True)
     brand = db.Column(db.String(30))
     purchase_date = db.Column(db.Date)
@@ -125,7 +120,6 @@ class MaterialTypes(db.Model):
 
 
 class Types(db.Model):
-
     __tablename__ = 'TYPES'
 
     type_name = db.Column(db.String(30), primary_key=True)
