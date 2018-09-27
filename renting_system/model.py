@@ -100,24 +100,23 @@ class Rental(db.Model):
         self.deposit = deposit
         self.notes = notes
 
-
     @property
     def serialize(self):
-        """Return object data in easily serializeable format"""
-        return {
-            'person_code': self.person_code,
-            'material_name': self.material_name,
-            'date_rental': self.date_rental,
-            'date_return': self.date_return,
-            'price': self.price,
-            'deposit': self.deposit,
-            'notes': self.notes,
-            'id': self.id
-        }
+            """Return object data in easily serializeable format"""
+            return {
+                'person_code': self.person_code,
+                'material_name': self.material_name,
+                'date_rental': self.date_rental,
+                'date_return': self.date_return,
+                'price': self.price,
+                'deposit': self.deposit,
+                'notes': self.notes,
+                'id': self.id
+
+            }
 
 
 class MaterialTypes(db.Model):
-
     __tablename__ = 'MATERIAL_TYPES'
 
     name = db.Column(db.String(20), primary_key=True)
@@ -143,11 +142,9 @@ def get_people_datas():
     return people_datas
 
 
-def get_person_code(code, email):
-    if code is not None:
-        return code
-    person_code = Person.query().with_entities(Person.code).filter_by(email=email)
-    return person_code
+def get_person_code_by_email(email):
+    person_code = Person.query.with_entities(Person.code).filter_by(email=email).one()
+    return person_code[0]
 
 
 def get_material_names():
@@ -168,3 +165,8 @@ def get_rentals():
 def get_materials():
     materials = Material.query.all()
     return materials
+
+
+def is_item_rented(item_name):
+    return Rental.query.with_entities(Rental.id).filter_by(material_name=item_name, date_return=None).one()
+

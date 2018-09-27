@@ -10,14 +10,10 @@
     <script src="{{url_for('static', filename='js/jquery.tablesorter.widgets.js')}}"></script>
     <script src="{{url_for('static', filename='js/jquery.tablesorter.pager.js')}}"></script>
 
-<!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.js"></script>
     <link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap.min.css')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='css/jquery.tablesorter.pager.css')}}">
-
-
-
 {% endblock%}
 
 {% block body %}
@@ -39,6 +35,7 @@
         <tr>
             <th data-sortable="true" data-field="person_code">Person</th>
             <th data-sortable="true" data-field="material_name">Material</th>
+            <th data-field="date_rental">Rental date</th>
             <th data-field="date_return">Return date</th>
             <th data-sortable="true" data-field="price">Price</th>
             <th data-sortable="true" data-field="deposit">Deposit</th>

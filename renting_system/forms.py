@@ -1,20 +1,13 @@
-from renting_system.model import show_people
+from renting_system.model import show_people, get_person_code_by_email
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, ValidationError, IntegerField, \
     SelectField, FloatField, BooleanField
 from wtforms.fields.html5 import DateField
 from wtforms.validators import DataRequired, Email
-from renting_system.model import Person, get_people_datas, get_material_names, get_material_types
+from renting_system.model import Person, get_people_datas, get_material_names, get_material_types, \
+    is_item_rented
 from wtforms.widgets import TextArea
-from enum import Enum
-
-
-class PeopleTypes(Enum):
-    COMMITTEE = 1
-    EPFL_STUDENT = 2
-    UNIL_STUDENT = 3
-    EPFL_PHD = 4
-    UNIL_PHD = 5
+from renting_system.utils import PeopleTypes
 
 
 class NewPersonForm(FlaskForm):
@@ -26,7 +19,6 @@ class NewPersonForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     phone = StringField('Phone number', validators=[DataRequired()])
     people_types = [('%s'%p.value, p.name) for p in PeopleTypes]
-    print(people_types)
     type = SelectField('Type', choices=people_types)
     bday = DateField('Birthday', validators=[DataRequired()], format='%d/%m/%Y')
     submit = SubmitField('Register')
@@ -58,21 +50,60 @@ class NewMaterialForm(FlaskForm):
     submit = SubmitField('Register')
 
 
+def validate_person_email(code):
+    def _validate(form, field):
+        code_from_email = get_person_code_by_email(field.data)
+        if code != code_from_email:
+            raise ValidationError('Email or code wrong: they belong to two ' /
+                                  'different people')
+        return _validate
+
+
+class EmailCodeValidator(object):
+    def __init__(self, message=None):
+        if not message:
+            message = u'The person code and the email do not match!'
+        self.message = message
+
+    def __call__(self, form, field):
+        # Pass field data to hash function
+        person_code = get_person_code_by_email(form.person_email.data)
+        if person_code != form.person_code.data:
+            raise ValidationError(self.message)
+
+
+class RentalMaterialValidator(object):
+    def __init__(self, message=None):
+        if not message:
+            message = u'Thie object is currently rented!'
+        self.message = message
+
+    def __call__(self, form, field):
+        if is_item_rented(form.material_name.data):
+            raise ValidationError(self.message)
+
 
 class NewRentalForm(FlaskForm):
+    """
+    Form to create a new rental
+    """
     people_emails = []
     people_codes = []
     for data in get_people_datas():
         people_emails.append(data[0])
         people_codes.append(data[1])
     person_code = SelectField('Person code', choices=[(elem, elem) for elem in people_codes])
-    person_email = SelectField('Person email', choices=[(elem, elem) for elem in people_emails], validators=[Email(), Optional()])
+    person_email = SelectField('Person email', choices=[(elem, elem) for elem in people_emails],
+                               validators=[Email(), EmailCodeValidator()])
     material_names = get_material_names()
-    material_name = SelectField('Material names', choices=[(elem[0], elem[0]) for elem in material_names])
+    material_name = SelectField('Material names', choices=[(elem[0], elem[0]) for elem in material_names],
+                                validators=[RentalMaterialValidator()])
     price = IntegerField('Rental price')
     deposit = FloatField('Deposit')
     notes = StringField(u'Notes', widget=TextArea())
     submit = SubmitField('Register')
+
+
 
 
 
