@@ -6,14 +6,9 @@
 
 {% block head %}
     <script src="{{url_for('static', filename='js/jquery-3.3.1.min.js')}}"></script>
-    <script src="{{url_for('static', filename='js/jquery.tablesorter.js')}}"></script>
-    <script src="{{url_for('static', filename='js/jquery.tablesorter.widgets.js')}}"></script>
-    <script src="{{url_for('static', filename='js/jquery.tablesorter.pager.js')}}"></script>
-
-<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.js"></script>
-    <link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap.min.css')}}">
-    <link rel="stylesheet" href="{{url_for('static', filename='css/jquery.tablesorter.pager.css')}}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.0/js/jquery.tablesorter.widgets.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 {% endblock%}
 
 {% block body %}
@@ -29,20 +24,45 @@
         data-search="true"
         data-id-field="email"
         data-toggle="table"
-        data-pagination="true"
-        data-url="/rental_table">
+        data-url="/rental_table"
+        data-id-field="id"
+>
     <thead>
-        <tr>
+
             <th data-sortable="true" data-field="person_code">Person</th>
             <th data-sortable="true" data-field="material_name">Material</th>
-            <th data-field="date_rental">Rental date</th>
-            <th data-field="date_return">Return date</th>
+            <th data-sortable="true" data-field="date_rental">Rental date</th>
+            <th data-sortable="true" data-field="date_return">Return date</th>
             <th data-sortable="true" data-field="price">Price</th>
             <th data-sortable="true" data-field="deposit">Deposit</th>
             <th data-sortable="true" data-field="notes">Notes</th>
-        </tr>
-    </thead>
+            <th data-field="action" data-formatter="actionFormatter" data-events="actionEvents"></th>
 
-  </table>
-  <script src="{{url_for('static', filename='js/table.js')}}"></script>
+    </thead>
+ </table>
+<script>
+function actionFormatter(value, row, index) {
+    return [
+         '<a class="edit ml10" href="javascript:void(0)" title="Edit">',
+         '<i class="glyphicon glyphicon-pencil"></i>',
+         '</a>',
+        '<a class="remove ml10" href="javascript:void(0)" title="Remove">',
+        '<i class="glyphicon glyphicon-remove"></i>',
+        '</a>'
+    ].join('');
+}
+
+window.actionEvents = {
+    'click .edit': function (e, value, row, index) {
+            alert('You click edit icon, row: ' + JSON.stringify(row));
+            console.log(value, row, index);
+    },
+    'click .remove': function (e, value, row, index) {
+        alert('You click remove icon, row: ' + JSON.stringify(row));
+        console.log(value, row, index);
+
+    }
+};
+
+</script>
 {% endblock %}
