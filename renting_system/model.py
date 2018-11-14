@@ -97,18 +97,17 @@ class Rental(db.Model):
 
     @property
     def serialize(self):
-            """Return object data in easily serializeable format"""
-            return {
-                'person_code': self.person_code,
-                'material_name': self.material_name,
-                'date_rental': self.date_rental,
-                'date_return': self.date_return,
-                'price': self.price,
-                'deposit': self.deposit,
-                'notes': self.notes,
-                'id': self.id
-
-            }
+        """Return object data in easily serializeable format"""
+        return {
+            'person_code': self.person_code,
+            'material_name': self.material_name,
+            'date_rental': self.date_rental,
+            'date_return': self.date_return,
+            'price': self.price,
+            'deposit': self.deposit,
+            'notes': self.notes,
+            'id': self.id
+        }
 
 
 class MaterialTypes(db.Model):
